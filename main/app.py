@@ -17,6 +17,7 @@ import shutil
 chromedriver = "/opt/homebrew/bin/chromedriver"
 options = webdriver.ChromeOptions()
 options.add_argument("--incognito")
+# options.add_argument("headless")
 # options.add_argument("head")
 driver = webdriver.Chrome(options=options)
 
@@ -97,28 +98,33 @@ def subscribe():
     global Logout_button
     ToSelectTab = driver.find_element(By.XPATH, "//a[@id='ctl00_MainContent_TabContainer1_tabCourseSearch_wcCourseSearch_lbtnGoToSelectedTab']")
     ToSelectTab.click()
-    while True:     
+    index = 0
+    while True:
         subscribe_buttons = driver.find_elements(By.XPATH, "//input[@value='加選']")
+
         if len(subscribe_buttons) <= 0:
             break
 
-        for button in subscribe_buttons:
-            parent_element = button.find_element(By.XPATH, "./ancestor::tr")  # 找到父元素 tr
-            info = parent_element.find_element(By.XPATH, ".//td[@class='gvAddWithdrawCellOne']").text
-            msg = driver.find_element(By.XPATH, "//span[@id='ctl00_MainContent_TabContainer1_tabSelected_lblMsgBlock']")
-            msg = msg.text
-            if msg.find("短時間內發出過量需求") != -1:
-                print("正在解決防搶課機制...\n" + "重新登入中...")
-                Logout_button = Get_Logout_button()
-                Logout_button.click()
-                login(1)
-                ToSelectTab = driver.find_element(By.XPATH, "//a[@id='ctl00_MainContent_TabContainer1_tabCourseSearch_wcCourseSearch_lbtnGoToSelectedTab']")
-                ToSelectTab.click()
-                break
-            
-            else:
-                button.click()
-                print(msg)
+        
+        index %= len(subscribe_buttons)
+        button = subscribe_buttons[index]
+        index += 1
+
+        msg = driver.find_element(By.XPATH, "//span[@id='ctl00_MainContent_TabContainer1_tabSelected_lblMsgBlock']")
+        msg = msg.text
+
+        if msg.find("短時間內發出過量需求") != -1:
+            print("正在解決防搶課機制...\n" + "重新登入中...")
+            Logout_button = Get_Logout_button()
+            Logout_button.click()
+            login(1)
+            ToSelectTab = driver.find_element(By.XPATH, "//a[@id='ctl00_MainContent_TabContainer1_tabCourseSearch_wcCourseSearch_lbtnGoToSelectedTab']")
+            ToSelectTab.click()
+        
+        else:
+            button.click()
+            print(msg)
+        
     return
 
 def getvcode(vcode_element):
