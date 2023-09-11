@@ -10,7 +10,6 @@
 git clone git@github.com:mengxian0913/Class-Grabbing-Robot.git
 pip install PIL
 pip install pytesseract
-pip install bs4
 pip install selenium
 ```
 
