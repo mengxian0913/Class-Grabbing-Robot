@@ -1,7 +1,6 @@
 from config import User
 from PIL import Image
 import pytesseract
-from bs4 import BeautifulSoup as bs4
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,7 +16,7 @@ import shutil
 chromedriver = "/opt/homebrew/bin/chromedriver"
 options = webdriver.ChromeOptions()
 options.add_argument("--incognito")
-#options.add_argument("headless")
+options.add_argument("headless")
 driver = webdriver.Chrome(options=options)
 
 Course_RUL = "https://course.fcu.edu.tw/"
