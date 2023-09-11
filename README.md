@@ -2,7 +2,7 @@
 
 ## 展示
 
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=NXj6LuLb0mk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+**https://www.youtube.com/watch?v=NXj6LuLb0mk**
 
 ## 如何使用
 
@@ -14,14 +14,14 @@ pip install bs4
 pip install selenium
 ```
 
-到 main/config.py 設定帳號密碼
+> 到 main/config.py 設定帳號密碼
 
 ```py
 ACCOUNT = "Account"
 PASSWORD = "Password"
 ```
 
-啟動
+> 啟動
 
 ```sh
 python main/app.py

@@ -4,7 +4,7 @@ class Users:
         self.password = password
 
 
-ACCOUNT = "d1123954"
-PASSWORD = "wayne30323520"
+ACCOUNT = "Account"
+PASSWORD = "Password"
 
 User = Users(ACCOUNT, PASSWORD)
