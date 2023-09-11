@@ -17,7 +17,7 @@ import shutil
 chromedriver = "/opt/homebrew/bin/chromedriver"
 options = webdriver.ChromeOptions()
 options.add_argument("--incognito")
-options.add_argument("headless")
+#options.add_argument("headless")
 driver = webdriver.Chrome(options=options)
 
 Course_RUL = "https://course.fcu.edu.tw/"
