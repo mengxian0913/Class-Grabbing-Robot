@@ -17,23 +17,32 @@ import shutil
 chromedriver = "/opt/homebrew/bin/chromedriver"
 options = webdriver.ChromeOptions()
 options.add_argument("--incognito")
-# options.add_argument("headless")
-# options.add_argument("head")
+options.add_argument("headless")
 driver = webdriver.Chrome(options=options)
 
 Course_RUL = "https://course.fcu.edu.tw/"
 Logout_button = None
-
+webwait = 3
 def clear(): os.system('clear')
 
 def Get_Logout_button():
     return driver.find_element(By.XPATH, "//input[@name='ctl00$btnLogout']")
 
 def Get_boxes():
-    return [driver.find_element(By.XPATH, "//input[@id='ctl00_Login1_UserName']"), driver.find_element(By.XPATH, "//input[@id='ctl00_Login1_Password']"), driver.find_element(By.XPATH, "//input[@id='ctl00_Login1_vcode']")]
-
-def Get_vcode_element():
-    return driver.find_element(By.XPATH, "//img[@id='ctl00_Login1_Image1']")
+    return [
+        WebDriverWait(driver, webwait).until(
+                EC.presence_of_element_located((By.XPATH, "//input[@id='ctl00_Login1_UserName']"))
+        ),
+        WebDriverWait(driver, webwait).until(
+                EC.presence_of_element_located((By.XPATH, "//input[@id='ctl00_Login1_Password']"))
+        ),
+        WebDriverWait(driver, webwait).until(
+                EC.presence_of_element_located((By.XPATH, "//input[@id='ctl00_Login1_vcode']"))
+        ),
+        WebDriverWait(driver, webwait).until(
+                EC.presence_of_element_located((By.XPATH, "//img[@id='ctl00_Login1_Image1']"))
+        )
+    ]
 
 def checklog():
     global Logout_button
@@ -62,8 +71,7 @@ def login(cnt):
 
     print(f"正在破解登入...(第 {cnt} 次)")
 
-    account_box, password_box, vcode_box = Get_boxes()
-    vcode_element = Get_vcode_element()
+    account_box, password_box, vcode_box, vcode_element = Get_boxes()
 
     account_box.clear()
     password_box.clear()
@@ -75,8 +83,7 @@ def login(cnt):
     if vcode.strip() == "":
         refresh = driver.find_element(By.XPATH, "//input[@id='ctl00_Login1_ImageButton1']")
         refresh.click()
-        account_box, password_box, vcode_box = Get_boxes()
-        vcode_element = Get_vcode_element()
+        account_box, password_box, vcode_box, vcode_element = Get_boxes()
         vcode = getvcode(vcode_element)
 
 
@@ -129,8 +136,8 @@ def subscribe():
 
 def getvcode(vcode_element):
     driver.save_screenshot('../image/screenshot.png')
-    shift_x = 90
-    shift_y = 250
+    shift_x = 85 # 90
+    shift_y = 245 # 250
     left = vcode_element.location['x'] + shift_x
     right = left + vcode_element.size['width'] + shift_x - 40
     top = vcode_element.location['y'] + shift_y
