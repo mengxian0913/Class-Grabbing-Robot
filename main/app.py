@@ -21,7 +21,9 @@ driver = webdriver.Chrome(options=options)
 
 Course_RUL = "https://course.fcu.edu.tw/"
 Logout_button = None
-webwait = 3
+webwait = 5
+ok = False
+
 def clear(): os.system('clear')
 
 def Get_Logout_button():
@@ -65,43 +67,55 @@ def translate(file):
     text = pytesseract.image_to_string(img, lang='eng')
     return text  
 
+broken = False
 
 def login(cnt):
+    global broken
 
-    print(f"正在破解登入...(第 {cnt} 次)")
-
-    account_box, password_box, vcode_box, vcode_element = Get_boxes()
-
-    account_box.clear()
-    password_box.clear()
-    vcode_box.clear()
-    vcode = getvcode(vcode_element)
-    
-    print("vcode: ", vcode)
-
-    if vcode.strip() == "":
-        refresh = driver.find_element(By.XPATH, "//input[@id='ctl00_Login1_ImageButton1']")
-        refresh.click()
-        account_box, password_box, vcode_box, vcode_element = Get_boxes()
-        vcode = getvcode(vcode_element)
-
-
-    account_box.send_keys(User.account)
-    password_box.send_keys(User.password)
-    vcode_box.send_keys(vcode)
-
-    if checklog() == True:
+    if broken:
         return
 
-    print("正在登入中...")
-    time.sleep(.5)
-    login(cnt + 1)
+    try:
+
+        print(f"正在破解登入...(第 {cnt} 次)")
+
+        account_box, password_box, vcode_box, vcode_element = Get_boxes()
+
+        account_box.clear()
+        password_box.clear()
+        vcode_box.clear()
+        vcode = getvcode(vcode_element)
+        
+        print("vcode: ", vcode)
+
+        if vcode.strip() == "":
+            refresh = driver.find_element(By.XPATH, "//input[@id='ctl00_Login1_ImageButton1']")
+            refresh.click()
+            account_box, password_box, vcode_box, vcode_element = Get_boxes()
+            vcode = getvcode(vcode_element)
+
+
+        account_box.send_keys(User.account)
+        password_box.send_keys(User.password)
+        vcode_box.send_keys(vcode)
+
+        if checklog() == True:
+            return
+
+        print("正在登入中...")
+        time.sleep(.5)
+        login(cnt + 1)
     
+    except:
+        broken = True
+        print("連線逾時٩(ŏ﹏ŏ、)۶\n重新導向中...")
+        return
+
     return
 
 
 def subscribe():
-    global Logout_button
+    global Logout_button, ok
     ToSelectTab = driver.find_element(By.XPATH, "//a[@id='ctl00_MainContent_TabContainer1_tabCourseSearch_wcCourseSearch_lbtnGoToSelectedTab']")
     ToSelectTab.click()
     index = 0
@@ -109,6 +123,7 @@ def subscribe():
         subscribe_buttons = driver.find_elements(By.XPATH, "//input[@value='加選']")
 
         if len(subscribe_buttons) <= 0:
+            ok = True
             break
 
         
@@ -124,6 +139,8 @@ def subscribe():
             Logout_button = Get_Logout_button()
             Logout_button.click()
             login(1)
+            if broken:
+                return
             ToSelectTab = driver.find_element(By.XPATH, "//a[@id='ctl00_MainContent_TabContainer1_tabCourseSearch_wcCourseSearch_lbtnGoToSelectedTab']")
             ToSelectTab.click()
         
@@ -135,6 +152,7 @@ def subscribe():
 
 def getvcode(vcode_element):
     driver.save_screenshot('../image/screenshot.png')
+    
     shift_x = 85 # 90
     shift_y = 245 # 250
     left = vcode_element.location['x'] + shift_x
@@ -150,14 +168,22 @@ def getvcode(vcode_element):
     
 
 def main():
-    global driver
-    driver.get(Course_RUL)
-    # driver.execute_script('document.body.style.zoom="1.25"')
-    driver.maximize_window()
-    
-    login(1)
-    subscribe()
 
+    global driver, broken
+
+    while not ok:
+        broken = False
+        try:
+            print('正在獲取網站資源...')
+            driver.get(Course_RUL)
+            # driver.maximize_window()
+        except:
+            continue
+
+        login(1)
+        subscribe()    
+
+    print("任務完成")
     time.sleep(1000)
 
     return
