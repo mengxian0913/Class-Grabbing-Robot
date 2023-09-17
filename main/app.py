@@ -1,4 +1,5 @@
 from config import User
+import ddddocr
 from PIL import Image
 import pytesseract
 from selenium import webdriver
@@ -64,8 +65,11 @@ def checklog():
 
 def translate(file):
     img = Image.open(file)
-    text = pytesseract.image_to_string(img, lang='eng')
-    return text  
+    ocr = ddddocr.DdddOcr()
+    res = ocr.classification(img)
+    print('识别出的验证码为：' + res)
+    # text = pytesseract.image_to_string(img, lang='eng')
+    return res
 
 broken = False
 
@@ -155,10 +159,10 @@ def getvcode(vcode_element):
     
     shift_x = 85 # 90
     shift_y = 245 # 250
-    left = vcode_element.location['x'] + shift_x
-    right = left + vcode_element.size['width'] + shift_x - 40
-    top = vcode_element.location['y'] + shift_y
-    bottom = top + vcode_element.size['height'] + shift_y/8 - 15
+    left = vcode_element.location['x']# + shift_x
+    right = left + vcode_element.size['width']# + shift_x - 40
+    top = vcode_element.location['y']# + shift_y
+    bottom = top + vcode_element.size['height']# + shift_y/8 - 15
     print(f"正在擷取圖片...({left}, {top}, {right}, {bottom})")
     img = Image.open('../image/screenshot.png')
     img = img.crop((left, top, right, bottom))
