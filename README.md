@@ -8,9 +8,9 @@
 
 ```sh
 git clone git@github.com:mengxian0913/Class-Grabbing-Robot.git
-pip install PIL
-pip install pytesseract
-pip install selenium
+pip3 install PIL
+pip3 install pytesseract
+pip3 install selenium
 ```
 
 > 到 main/config.py 設定帳號密碼
@@ -23,5 +23,7 @@ PASSWORD = "Password"
 > 啟動
 
 ```sh
-python main/app.py
+<<<<<<< HEAD
+python3 main/app.py
+>>>>>>> 71db0fc (update)
 ```
