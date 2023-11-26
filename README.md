@@ -23,7 +23,5 @@ PASSWORD = "Password"
 > 啟動
 
 ```sh
-<<<<<<< HEAD
 python3 main/app.py
->>>>>>> 71db0fc (update)
 ```
