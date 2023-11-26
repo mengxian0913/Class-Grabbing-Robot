@@ -3,7 +3,6 @@ class Users:
         self.account = account
         self.password = password
 
-
 ACCOUNT = "ACCOUNT"
 PASSWORD = "PASSWORD"
 
