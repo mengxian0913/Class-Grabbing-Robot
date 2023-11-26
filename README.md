@@ -24,6 +24,8 @@ PASSWORD = "Password"
 
 ```sh
 <<<<<<< HEAD
+python main/app.py
+=======
 python3 main/app.py
 >>>>>>> 71db0fc (update)
 ```
